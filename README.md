@@ -47,3 +47,86 @@
 | **Schedule** | ScheduleID (PK), PairNumber, GroupID (FK), TeacherID (FK), RoomID (FK), SubjectID (FK), LessonType, DayOfWeek |
 
 ### ER-діаграма:
+## ER-модель (зв'язки між таблицями)
+
+### Схема зв'язків:
+
+| Таблиця 1 | Таблиця 2 | Тип зв'язку | Зовнішній ключ |
+|-----------|-----------|-------------|----------------|
+| Groups | Schedule | 1 : M | Schedule.GroupID → Groups.GroupID |
+| Teachers | Schedule | 1 : M | Schedule.TeacherID → Teachers.TeacherID |
+| Classrooms | Schedule | 1 : M | Schedule.RoomID → Classrooms.RoomID |
+| Subjects | Schedule | 1 : M | Schedule.SubjectID → Subjects.SubjectID |
+| Teachers | TeacherCompetencies | 1 : M | TeacherCompetencies.TeacherID → Teachers.TeacherID |
+| RoomTypes | Classrooms | 1 : M | Classrooms.RoomType → RoomTypes.RoomType |
+
+### Діаграма зв'язків:
+Groups ──────────┐
+Teachers ────────┼──► Schedule ◄── Subjects
+Classrooms ──────┘
+│
+▼
+RoomTypes
+
+Teachers ────────► TeacherCompetencies
+
+## ER-діаграма (Mermaid)
+
+```mermaid
+erDiagram
+    Groups ||--o{ Schedule : has
+    Subjects ||--o{ Schedule : has
+    Teachers ||--o{ Schedule : teaches
+    Classrooms ||--o{ Schedule : uses
+    RoomTypes ||--o{ Classrooms : defines
+    Teachers ||--o{ TeacherCompetencies : has
+
+    Groups {
+        int GroupID PK
+        string GroupNumber UK
+        string HeadLastName
+        int Course
+        string Specialty
+    }
+
+    Subjects {
+        int SubjectID PK
+        string SubjectName UK
+    }
+
+    Teachers {
+        int TeacherID PK
+        string FullName
+        string Department
+        string Position
+        string Degree
+    }
+
+    Classrooms {
+        int RoomID PK
+        string RoomNumber UK
+        string RoomType FK
+        int Building
+    }
+
+    Schedule {
+        int ScheduleID PK
+        int PairNumber
+        int GroupID FK
+        int TeacherID FK
+        int RoomID FK
+        int SubjectID FK
+        string LessonType
+        int DayOfWeek
+    }
+
+    RoomTypes {
+        string RoomType PK
+        string AllowedLessonTypes
+    }
+
+    TeacherCompetencies {
+        int CompetenceID PK
+        int TeacherID FK
+        string LessonType
+    }
